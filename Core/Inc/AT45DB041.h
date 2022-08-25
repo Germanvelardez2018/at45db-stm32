@@ -34,3 +34,6 @@ typedef enum {
 
 
 
+ uint8_t get_status(void);
+
+ uint8_t is_ready(void);
