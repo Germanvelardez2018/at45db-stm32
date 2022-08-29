@@ -33,10 +33,10 @@ Controller for flash memory AT45DB041. Based on the STM32 HAL project but the co
 
 <h4 align="center">Signal from logic analyzer
 </h4>
-<p> Write buffer1 (0x84) with data = "Boca jr murio en madrid \n"|</p>
+<p> Write page throught buffer1 (0x82) with data = "Hello world AT45DB\n"|</p>
  <div align="center" >
-<img  src="img/writebuffer1.jpg" border="1px" 
-     height="480px" width="560px"/>
+<img  src="img/writepage.jpg" border="1px" 
+     height="480px" width="640px"/>
 </div>
 
 
@@ -45,8 +45,8 @@ Controller for flash memory AT45DB041. Based on the STM32 HAL project but the co
 
 <h4 align="center">Signal from logic analyzer
 </h4>
-<p> Read buffer1 with command: 0xD4 </p>
+<p> Read page with command: 0x0B </p>
  <div align="center" >
-<img  src="img/readbuffer1.jpg" border="1px" 
-     height="480px" width="560px"/>
+<img  src="img/read_page.jpg" border="1px" 
+     height="480px" width="640px"/>
 </div>
