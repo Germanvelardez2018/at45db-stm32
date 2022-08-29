@@ -23,7 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "string.h"
-#define MSG             "hola mundo\n"
+#define INIT_MSG             "Init program\n"
 #define SIZE_MSG        (strlen(MSG))
 
 /* USER CODE END Includes */
@@ -106,26 +106,40 @@ uint8_t buffer[100]={0};
 uint8_t  buffer1[50]={0};
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  HAL_UART_Transmit(&huart2,MSG,SIZE_MSG,1000);
-  HAL_Delay(2000);
-  ready = is_ready();
-
-  #define MSG       "Boca jr murio en Madrid \n"
+  
+  #define MSG       "Hello world AT45DB\n"
   #define MSG_LEN    strlen(MSG) +1
 
-  write_buffer1(MSG,MSG_LEN,0);
+  #define BUFFER_FLAG          (0)
+  HAL_UART_Transmit(&huart2,INIT_MSG,SIZE_MSG,1000);
+  HAL_Delay(2000);
+  ready = is_ready();
+  sprintf(buffer," device %s \n",(ready)?"ready":"bussy");
+  HAL_UART_Transmit(&huart2,buffer,strlen(buffer),1000);
+
+  #if (BUFFER_FLAG == 1)
+  //write_buffer1(MSG,MSG_LEN,0);
   HAL_Delay(100);
-  read_buffer1(buffer1,50,0);
+  read_buffer1(buffer1,MSG_LEN,0);
+  #else
+
+  write_page(MSG,MSG_LEN,100,0);
+  HAL_Delay(100);
+  read_page(buffer1,MSG_LEN,100,0);
+
+  #endif
+
+    
+    sprintf(buffer," \nData readed:%s\n",buffer1);
+    HAL_UART_Transmit(&huart2,buffer,strlen(buffer),1000);
+ 
   while (1)
   {
    
 
     HAL_Delay(1000);
     HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
-    sprintf(buffer," device %s \n",(ready)?"ready":"bussy");
-    HAL_UART_Transmit(&huart2,buffer,strlen(buffer),1000);
-    sprintf(buffer," buffer1:%s \n",buffer1);
-    HAL_UART_Transmit(&huart2,buffer,strlen(buffer),1000);
+   
 
    
 

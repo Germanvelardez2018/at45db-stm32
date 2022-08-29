@@ -62,3 +62,13 @@ typedef enum {
  */
 uint8_t read_buffer1(uint8_t* data,uint16_t len, uint16_t pos);
 
+
+
+
+
+
+uint8_t write_page(uint8_t* data, uint16_t len, uint16_t pag,uint16_t pos);
+
+
+
+uint8_t read_page(uint8_t* data, uint16_t len, uint16_t pag,uint16_t pos);

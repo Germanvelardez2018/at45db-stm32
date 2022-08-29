@@ -22,24 +22,27 @@ extern hspi2;
 
 
 // READ FUNCTIONS
-#define      CMD_READBUFF1                   (0xD4)
-#define      CMD_READBUFF2                   (0x56)
-#define      CMD_READPAGE                    (0x52)      
-
+#define      CMD_READBUFF1                    (0xD4)
+#define      CMD_READBUFF2                    (0x56)
+#define      CMD_READPAGE                     (0x52)      
+#define      CMD_READPAGEHF                   (0x0B)  // Read page in high freq.
+#define      CMD_READPAGELF                   (0x03)  // Read pafe in low freq.
 
 //WRITE FUNCTIONS
-#define    CMD_WRITEBUFF1                    (0x84)
-#define    CMD_WRITEBUFF2                    (0x87)
-#define    CMD_PAGETOBUFF1                   (0x53)
-#define    CMD_PAGETOBUFF2                   (0x55)
+#define    CMD_WRITEPAGE_B1                   (0x82)
+#define    CMD_WRITEPAGE_B2                   (0x85)
+#define    CMD_WRITEBUFF1                     (0x84)
+#define    CMD_WRITEBUFF2                     (0x87)
+#define    CMD_PAGETOBUFF1                    (0x53)
+#define    CMD_PAGETOBUFF2                    (0x55)
 
-#define    CMD_PAGEERASEBUFF1                 (0x83)  // Write tn page through buffer1
-#define    CMD_PAGEERASEBUFF2                 (0X86)  // Write to page through buffer 2
+#define    CMD_PAGETHROUGHBUFF1               (0x83)  // Write tn page through buffer 1 with automatic erase
+#define    CMD_PAGETHROUGHBUFF2               (0X86)  // Write to page through buffer 2 with automatic erase
 
 #define    CMD_PAGEBUFF1                      (0X88)
 #define    CMD_PAGEBUFF1                      (0X89)
 
-#define    CMD_PAGEBUFF1POS                    (0x02) // ! Permite seleecionar la posicion inicial
+#define    CMD_PAGEBUFF1POS                   (0x02) // ! Permite seleecionar la posicion inicial
 
 // COMPARE FUNCTIONS
 #define    CMD_CMPBUFF1                      (0x60)
@@ -82,6 +85,9 @@ extern hspi2;
 #define AT45DB_STATUS_PROTECT               (1 << 1) /* PROTECT */
 #define AT45DB_STATUS_COMP                  (1 << 6) /* COMP */
 #define AT45DB_STATUS_READY                 (1 << 7) /* RDY/BUSY */
+
+
+#define dummyByte                           (0xFF)
 
 
 
@@ -248,5 +254,40 @@ uint8_t read_buffer1(uint8_t* data,uint16_t len, uint16_t pos){
 
         return ret;
 
+}
+
+
+
+uint8_t write_page(uint8_t* data, uint16_t len, uint16_t pag,uint16_t pos){
+        uint8_t ret=0;
+        uint32_t address =  (pag << 9) | pos ;   // position into the buffer
+        uint8_t cmd[4] ={0};
+        cmd[0] = CMD_WRITEPAGE_B1;
+        cmd[1] = (address >> 24) & 0xFF;
+        cmd[2] = (address >> 16) & 0xFF;
+        cmd[3] = (address >> 8)  & 0xFF;
+        gpio_write(0);
+        spi_write(&cmd,4);
+        spi_read(data,len);
+        gpio_write(1);
+        return ret;        
+}
+
+
+
+uint8_t read_page(uint8_t* data, uint16_t len, uint16_t pag,uint16_t pos){
+        uint8_t ret=0;
+        uint32_t address =  (pag << 9) | pos ;   
+        uint8_t cmd[5] ={0};
+        cmd[0] = CMD_READPAGEHF;
+        cmd[1] = (address >> 24) & 0xFF;
+        cmd[2] = (address >> 16) & 0xFF;
+        cmd[3] = (address >> 8)  & 0xFF;
+        cmd[4] = dummyByte;
+        gpio_write(0);
+        spi_write(&cmd,4);
+        spi_read(data,len);
+        gpio_write(1);
+        return ret;        
 }
 
