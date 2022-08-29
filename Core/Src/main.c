@@ -105,11 +105,13 @@ uint8_t ready = 0;
 uint8_t buffer[100]={0};
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-    HAL_UART_Transmit(&huart2,MSG,SIZE_MSG,1000);
+  HAL_UART_Transmit(&huart2,MSG,SIZE_MSG,1000);
+  HAL_Delay(2000);
+  ready = is_ready();
 
   while (1)
   {
-    ready = is_ready();
+   
 
     HAL_Delay(1000);
     HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);

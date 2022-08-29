@@ -19,7 +19,6 @@ extern hspi2;
 
 
 
-#define      CMD_READSTATUS                  (0xD7)    //! status register 2 bytes
 
 
 // READ FUNCTIONS
@@ -47,9 +46,17 @@ extern hspi2;
 #define    CMD_CMPBUFF2                      (0x61)
 
 // STATE
-#define CMD_GETSTATUS                      (0xD7)
-#define CMD_RESUMEN                        (0xAB)
-#define CMD_LOWPOWER                       (0xB9)  
+#define    CMD_GETSTATUS                    (0xD7)   //! status register 2 bytes
+#define    CMD_RESUMEN                      (0xAB)
+#define    CMD_LOWPOWER                     (0xB9)  
+#define    CMD_READID                       (0x9F)
+// ID_DEVICE
+
+#define DEVICE_ID_0                          0x1F    //id byte  1
+#define DEVICE_ID_1                          0x24    //id byte  2
+#define DEVICE_ID_2                          0x00    //id byte  3
+#define EDI                                  0x01    // id byte 4
+
 
 
 // CONFIG SIZE FROM 265 TO 255 BYTE PER PAGE
@@ -136,7 +143,7 @@ PRIVATE  status_t  spi_read(uint8_t* buffer, size_t len){
 // PRIVATE FUNCTION API
 
 
-PRIVATE uint8_t  at45db_status(){
+PRIVATE uint8_t  at45db_get_status(){
         uint8_t first_byte_status[2] = {0};
         uint8_t cmd = CMD_GETSTATUS;
         gpio_write(0);
@@ -148,10 +155,33 @@ PRIVATE uint8_t  at45db_status(){
 }
 
 
-PRIVATE uint8_t _is_ready(){
+PRIVATE uint8_t at45db_is_ready(){
         uint8_t ret= 0; // Device bussy
-        return (ret = at45db_status() & AT45DB_STATUS_READY);
+        ret = at45db_get_status() ;
+        return (ret & AT45DB_STATUS_READY);
 }
+
+
+
+PRIVATE uint8_t  at45db_check_id(){
+        uint8_t ret = 0;
+        uint8_t data[4]={0};
+        uint8_t cmd = CMD_READID;
+        gpio_write(0);
+        spi_write(&cmd,1);
+        spi_read(&data,4);
+        gpio_write(1);
+        if(data[0] == DEVICE_ID_0   
+        || data[1] == DEVICE_ID_1        
+        || data[2] == DEVICE_ID_2        
+        || data[3] == EDI) {
+                ret = 1; // id checked. OK
+        }
+        return ret;
+}
+
+
+
 
  uint8_t get_status(){
         uint8_t res = at45db_status();
@@ -159,5 +189,8 @@ PRIVATE uint8_t _is_ready(){
 }
 
 uint8_t is_ready(){
-        uint8_t ret = _is_ready();
+        uint8_t ret = at45db_is_ready();
+        while(!(ret = at45db_is_ready));
+                ret = at45db_check_id();
+        return ret;
 }
