@@ -103,12 +103,19 @@ uint8_t ready = 0;
   /* USER CODE END 2 */
 
 uint8_t buffer[100]={0};
+uint8_t  buffer1[50]={0};
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   HAL_UART_Transmit(&huart2,MSG,SIZE_MSG,1000);
   HAL_Delay(2000);
   ready = is_ready();
 
+  #define MSG       "Boca jr murio en Madrid \n"
+  #define MSG_LEN    strlen(MSG) +1
+
+  write_buffer1(MSG,MSG_LEN,0);
+  HAL_Delay(100);
+  read_buffer1(buffer1,50,0);
   while (1)
   {
    
@@ -116,6 +123,8 @@ uint8_t buffer[100]={0};
     HAL_Delay(1000);
     HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
     sprintf(buffer," device %s \n",(ready)?"ready":"bussy");
+    HAL_UART_Transmit(&huart2,buffer,strlen(buffer),1000);
+    sprintf(buffer," buffer1:%s \n",buffer1);
     HAL_UART_Transmit(&huart2,buffer,strlen(buffer),1000);
 
    

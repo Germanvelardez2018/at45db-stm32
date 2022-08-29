@@ -22,7 +22,7 @@ extern hspi2;
 
 
 // READ FUNCTIONS
-#define      CMD_READBUFF1                   (0x54)
+#define      CMD_READBUFF1                   (0xD4)
 #define      CMD_READBUFF2                   (0x56)
 #define      CMD_READPAGE                    (0x52)      
 
@@ -33,8 +33,8 @@ extern hspi2;
 #define    CMD_PAGETOBUFF1                   (0x53)
 #define    CMD_PAGETOBUFF2                   (0x55)
 
-#define    CMD_PAGEERASEBUFF1                 (0x83)
-#define    CMD_PAGEERASEBUFF2                 (0X86)
+#define    CMD_PAGEERASEBUFF1                 (0x83)  // Write tn page through buffer1
+#define    CMD_PAGEERASEBUFF2                 (0X86)  // Write to page through buffer 2
 
 #define    CMD_PAGEBUFF1                      (0X88)
 #define    CMD_PAGEBUFF1                      (0X89)
@@ -93,6 +93,11 @@ extern hspi2;
 
 
 // You need define this function with your HAL function.
+
+
+PRIVATE void delay(uint32_t time){
+        HAL_Delay(time);
+}
 
 
 PRIVATE status_t spi_init(){
@@ -183,6 +188,10 @@ PRIVATE uint8_t  at45db_check_id(){
 
 
 
+
+
+
+
  uint8_t get_status(){
         uint8_t res = at45db_status();
         return res;
@@ -190,7 +199,54 @@ PRIVATE uint8_t  at45db_check_id(){
 
 uint8_t is_ready(){
         uint8_t ret = at45db_is_ready();
-        while(!(ret = at45db_is_ready));
+        uint32_t timeout = 500;
+        while(!(ret = at45db_is_ready) || (timeout != 0) ){
+                timeout --;
+                delay(1);
+        }
                 ret = at45db_check_id();
         return ret;
 }
+
+
+uint8_t write_buffer1(uint8_t* data,uint16_t len, uint16_t pos){
+        uint8_t ret=0;
+        uint32_t address =  pos ;   // position into the buffer
+        uint8_t cmd[4] ={0};
+        cmd[0] = CMD_WRITEBUFF1;
+        cmd[1] = (address >> 24) & 0xFF;
+        cmd[2] = (address >> 16) & 0xFF;
+        cmd[3] = (address >> 8)  & 0xFF;
+        gpio_write(0);
+        spi_write(&cmd,4);
+        spi_write(data,len);
+
+        gpio_write(1);
+
+
+        return ret;
+
+}
+
+
+
+
+uint8_t read_buffer1(uint8_t* data,uint16_t len, uint16_t pos){
+        uint8_t ret=0;
+        uint32_t address =  pos ;   // position into the buffer
+        uint8_t cmd[4] ={0};
+        cmd[0] = CMD_READBUFF1;
+        cmd[1] = (address >> 24) & 0xFF;
+        cmd[2] = (address >> 16) & 0xFF;
+        cmd[3] = (address >> 8)  & 0xFF;
+        gpio_write(0);
+        spi_write(&cmd,4);
+        spi_read(data,len);
+
+        gpio_write(1);
+
+
+        return ret;
+
+}
+

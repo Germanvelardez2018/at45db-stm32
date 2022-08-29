@@ -37,3 +37,28 @@ typedef enum {
  uint8_t get_status(void);
 
  uint8_t is_ready(void);
+
+
+
+/**
+ * @brief Write in buffer 1, SRAM....volatile
+ * 
+ * @param data 
+ * @param len 
+ * @param pos 
+ * @return ** uint8_t 
+ */
+ uint8_t write_buffer1(uint8_t* data,uint16_t len, uint16_t pos);
+
+
+
+/**
+ * @brief Read en buffer 1, en SRAM ...volatile
+ * 
+ * @param data 
+ * @param len 
+ * @param pos 
+ * @return ** uint8_t 
+ */
+uint8_t read_buffer1(uint8_t* data,uint16_t len, uint16_t pos);
+
