@@ -17,3 +17,13 @@ Controller for flash memory AT45DB041. Based on the STM32 HAL project but the co
 <img  src="img/signals.jpg" border="1px" 
      height="480px" width="560px"/>
 </div>
+
+
+
+<h4 align="center">Signal fromlogic analyzer
+</h4>
+<p> Command 0x9F is sent to obtain the 4 ID registers: |0x1F|0x24|0x00|0x01|</p>
+ <div align="center" >
+<img  src="img/get_id.jpg" border="1px" 
+     height="480px" width="560px"/>
+</div>
