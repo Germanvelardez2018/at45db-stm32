@@ -173,6 +173,16 @@ PRIVATE uint8_t at45db_is_ready(){
 }
 
 
+PRIVATE void at45db_wait(uint16_t timeout){
+        uint8_t ret = at45db_is_ready();
+        while(!(ret = at45db_is_ready) || (timeout != 0) ){
+                timeout --;
+                delay(1);
+        }
+}
+
+
+
 
 PRIVATE uint8_t  at45db_check_id(){
         uint8_t ret = 0;
@@ -205,12 +215,8 @@ PRIVATE uint8_t  at45db_check_id(){
 
 uint8_t is_ready(){
         uint8_t ret = at45db_is_ready();
-        uint32_t timeout = 500;
-        while(!(ret = at45db_is_ready) || (timeout != 0) ){
-                timeout --;
-                delay(1);
-        }
-                ret = at45db_check_id();
+        at45db_wait(500);
+        ret = at45db_check_id();
         return ret;
 }
 
@@ -228,6 +234,7 @@ uint8_t write_buffer1(uint8_t* data,uint16_t len, uint16_t pos){
         spi_write(data,len);
 
         gpio_write(1);
+        at45db_wait(500);
 
 
         return ret;
@@ -250,6 +257,8 @@ uint8_t read_buffer1(uint8_t* data,uint16_t len, uint16_t pos){
         spi_read(data,len);
 
         gpio_write(1);
+        at45db_wait(500);
+
 
 
         return ret;
@@ -270,6 +279,8 @@ uint8_t write_page(uint8_t* data, uint16_t len, uint16_t pag,uint16_t pos){
         spi_write(&cmd,4);
         spi_read(data,len);
         gpio_write(1);
+        at45db_wait(500);
+
         return ret;        
 }
 
@@ -288,6 +299,9 @@ uint8_t read_page(uint8_t* data, uint16_t len, uint16_t pag,uint16_t pos){
         spi_write(&cmd,4);
         spi_read(data,len);
         gpio_write(1);
+        //wait
+        at45db_wait(500);
+
         return ret;        
 }
 

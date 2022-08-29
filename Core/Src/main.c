@@ -107,12 +107,11 @@ uint8_t  buffer1[50]={0};
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   
-  #define MSG       "Hello world AT45DB\n"
+  #define MSG       "Driver  AT45DB by Velardez German\n"
   #define MSG_LEN    strlen(MSG) +1
 
   #define BUFFER_FLAG          (0)
   HAL_UART_Transmit(&huart2,INIT_MSG,SIZE_MSG,1000);
-  HAL_Delay(2000);
   ready = is_ready();
   sprintf(buffer," device %s \n",(ready)?"ready":"bussy");
   HAL_UART_Transmit(&huart2,buffer,strlen(buffer),1000);
@@ -122,11 +121,9 @@ uint8_t  buffer1[50]={0};
   HAL_Delay(100);
   read_buffer1(buffer1,MSG_LEN,0);
   #else
-
   write_page(MSG,MSG_LEN,100,0);
   HAL_Delay(100);
   read_page(buffer1,MSG_LEN,100,0);
-
   #endif
 
     
