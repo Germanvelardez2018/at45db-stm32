@@ -111,6 +111,7 @@ uint8_t  buffer1[50]={0};
   #define MSG_LEN    strlen(MSG) +1
 
   #define BUFFER_FLAG          (0)
+  #define FULL_ERASE           (1)
   HAL_UART_Transmit(&huart2,INIT_MSG,SIZE_MSG,1000);
   ready = is_ready();
   sprintf(buffer," device %s \n",(ready)?"ready":"bussy");
@@ -121,14 +122,25 @@ uint8_t  buffer1[50]={0};
   HAL_Delay(100);
   read_buffer1(buffer1,MSG_LEN,0);
   #else
-  write_page(MSG,MSG_LEN,100,0);
+ // write_page(MSG,MSG_LEN,100,0);
   HAL_Delay(100);
   read_page(buffer1,MSG_LEN,100,0);
   #endif
 
-    
-    sprintf(buffer," \nData readed:%s\n",buffer1);
-    HAL_UART_Transmit(&huart2,buffer,strlen(buffer),1000);
+  sprintf(buffer," \nData readed:%s\n",buffer1);
+  HAL_UART_Transmit(&huart2,buffer,strlen(buffer),1000);
+
+
+  #if (BUFFER_FLAG == 0 && FULL_ERASE == 1)
+  full_erase_memory();
+  read_page(buffer1,MSG_LEN,100,0);
+  sprintf(buffer," \nRead  page after full erase chip:%s\n",buffer1);
+
+  HAL_UART_Transmit(&huart2,buffer,strlen(buffer),1000);
+
+
+  
+  #endif
  
   while (1)
   {

@@ -71,7 +71,7 @@ extern hspi2;
 #define CMD_ERASEPAGE                   (0X81)
 #define CMD_ERASEBLOCK                  (0x50)
 #define CMD_ERASESECTOR                 (0x7C)
-#define SEC_ERASECHIP                   (0xC7, 0x94, 0x80, 0x9A)
+#define SEC_ERASECHIP                   (0x9A, 0x80, 0x94, 0xC7) //! dont use this array to init a buffer. It won't work
 
 
 // MASK
@@ -305,3 +305,20 @@ uint8_t read_page(uint8_t* data, uint16_t len, uint16_t pag,uint16_t pos){
         return ret;        
 }
 
+
+
+
+uint8_t full_erase_memory(){
+
+        uint8_t ret =0;
+        uint8_t cmd[4]={0};
+        cmd[0] = 0xC7;
+        cmd[1] = 0x94;
+        cmd[2] = 0x80;
+        cmd[3] = 0x9a;
+        gpio_write(0);
+        spi_write(&cmd,4);
+        gpio_write(1);
+        at45db_wait(2500);
+        return ret;
+}
