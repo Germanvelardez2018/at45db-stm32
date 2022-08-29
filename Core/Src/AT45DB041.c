@@ -149,8 +149,6 @@ PRIVATE  status_t  spi_read(uint8_t* buffer, size_t len){
 
 
 
-
-
 // PRIVATE FUNCTION API
 
 
@@ -204,6 +202,21 @@ PRIVATE uint8_t  at45db_check_id(){
 
 
 
+
+
+ uint8_t at45db_set_size_page( size_page_t size){
+
+        gpio_write(0);
+        static uint8_t at45db_pgsize_cmd[] = {0x3D, 0x2A, 0x80, 0xA6};  // 256
+        if( size == SIZE_PAGE_264){
+        at45db_pgsize_cmd[3] = 0xA7; // 264 It's the default mode
+        }
+        spi_write(at45db_set_size_page,4);
+        gpio_write(1);
+        at45db_wait(500);
+
+
+}
 
 
 

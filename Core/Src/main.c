@@ -100,10 +100,11 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 uint8_t ready = 0;
-  /* USER CODE END 2 */
 
 uint8_t buffer[100]={0};
 uint8_t  buffer1[50]={0};
+  /* USER CODE END 2 */
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   
@@ -122,7 +123,7 @@ uint8_t  buffer1[50]={0};
   HAL_Delay(100);
   read_buffer1(buffer1,MSG_LEN,0);
   #else
- // write_page(MSG,MSG_LEN,100,0);
+  write_page(MSG,MSG_LEN,100,0);
   HAL_Delay(100);
   read_page(buffer1,MSG_LEN,100,0);
   #endif

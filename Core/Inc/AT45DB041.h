@@ -29,14 +29,42 @@ typedef enum {
 } level_t;
 
 
+typedef enum{
+    SIZE_PAGE_256 = 0,
+    SIZE_PAGE_264 = 1
+} size_page_t;
 
 
 
 
 
+/**
+ * @brief Get the status object
+ * 
+ * @return ** uint8_t 
+ */
  uint8_t get_status(void);
 
+
+
+/**
+ * @brief 
+ * 
+ * @return ** uint8_t 
+ */
  uint8_t is_ready(void);
+
+
+
+
+/**
+ * @brief 
+ * 
+ * @param size 
+ * @return ** uint8_t 
+ */
+ uint8_t at45db_set_size_page( size_page_t size);
+
 
 
 
