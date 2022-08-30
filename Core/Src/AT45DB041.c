@@ -205,7 +205,6 @@ PRIVATE uint8_t  at45db_check_id(){
 
 
  uint8_t at45db_set_size_page( size_page_t size){
-
         gpio_write(0);
         static uint8_t at45db_pgsize_cmd[] = {0x3D, 0x2A, 0x80, 0xA6};  // 256
         if( size == SIZE_PAGE_264){
@@ -214,8 +213,6 @@ PRIVATE uint8_t  at45db_check_id(){
         spi_write(at45db_set_size_page,4);
         gpio_write(1);
         at45db_wait(500);
-
-
 }
 
 
@@ -334,4 +331,26 @@ uint8_t full_erase_memory(){
         gpio_write(1);
         at45db_wait(2500);
         return ret;
+}
+
+
+void at45_resumen(){
+        uint8_t ret =0;
+        uint8_t cmd=CMD_RESUMEN;
+        gpio_write(0);
+        spi_write(&cmd,1);
+        gpio_write(1);
+        return ret;
+}
+
+
+void at45_sleep(){
+        uint8_t ret =0;
+        uint8_t cmd=CMD_LOWPOWER;
+        gpio_write(0);
+        spi_write(&cmd,1);
+        gpio_write(1);
+        return ret;
+
+
 }

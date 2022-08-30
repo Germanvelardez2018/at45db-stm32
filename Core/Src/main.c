@@ -118,6 +118,8 @@ uint8_t  buffer1[50]={0};
   sprintf(buffer," device %s \n",(ready)?"ready":"bussy");
   HAL_UART_Transmit(&huart2,buffer,strlen(buffer),1000);
 
+
+  at45_resumen();
   #if (BUFFER_FLAG == 1)
   //write_buffer1(MSG,MSG_LEN,0);
   HAL_Delay(100);
@@ -142,7 +144,7 @@ uint8_t  buffer1[50]={0};
 
   
   #endif
- 
+ at45_sleep();
   while (1)
   {
    

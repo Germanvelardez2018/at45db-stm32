@@ -116,3 +116,18 @@ uint8_t write_page(uint8_t* data, uint16_t len, uint16_t pag,uint16_t pos);
  * @return ** uint8_t  
  */
 uint8_t read_page(uint8_t* data, uint16_t len, uint16_t pag,uint16_t pos);
+
+
+/**
+ * @brief Resume the device from the sleep mode
+ * 
+ * @return ** void 
+ */
+void at45_resumen();
+
+/**
+ * @brief  Sleep mode
+ * 
+ * @return ** void 
+ */
+void at45_sleep();
