@@ -108,11 +108,11 @@ uint8_t  buffer1[50]={0};
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   
-  #define MSG       "Driver  AT45DB by Velardez German\n"
+  #define MSG       " Driver  AT45DB by Velardez German \n"
   #define MSG_LEN    strlen(MSG) +1
 
   #define BUFFER_FLAG          (0)
-  #define FULL_ERASE           (1)
+  #define FULL_ERASE           (0)
   HAL_UART_Transmit(&huart2,INIT_MSG,SIZE_MSG,1000);
   ready = is_ready();
   sprintf(buffer," device %s \n",(ready)?"ready":"bussy");
@@ -125,9 +125,9 @@ uint8_t  buffer1[50]={0};
   HAL_Delay(100);
   read_buffer1(buffer1,MSG_LEN,0);
   #else
-  write_page(MSG,MSG_LEN,100,0);
+  write_page(MSG,MSG_LEN,100,2);
   HAL_Delay(100);
-  read_page(buffer1,MSG_LEN,100,0);
+  read_page(buffer1,MSG_LEN,100,2);
   #endif
 
   sprintf(buffer," \nData readed:%s\n",buffer1);
@@ -140,11 +140,8 @@ uint8_t  buffer1[50]={0};
   sprintf(buffer," \nRead  page after full erase chip:%s\n",buffer1);
 
   HAL_UART_Transmit(&huart2,buffer,strlen(buffer),1000);
-
-
-  
   #endif
- at45_sleep();
+  at45_sleep();
   while (1)
   {
    
@@ -152,9 +149,6 @@ uint8_t  buffer1[50]={0};
     HAL_Delay(1000);
     HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
    
-
-   
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

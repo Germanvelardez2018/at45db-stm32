@@ -88,7 +88,7 @@ extern hspi2;
 
 
 #define dummyByte                           (0xFF)
-
+#define AT45DB_TIMEOUT                       (50)
 
 
 #define PRIVATE    static
@@ -212,7 +212,7 @@ PRIVATE uint8_t  at45db_check_id(){
         }
         spi_write(at45db_set_size_page,4);
         gpio_write(1);
-        at45db_wait(500);
+        at45db_wait(AT45DB_TIMEOUT);
 }
 
 
@@ -225,8 +225,7 @@ PRIVATE uint8_t  at45db_check_id(){
 
 uint8_t is_ready(){
         uint8_t ret = at45db_is_ready();
-        at45db_wait(500);
-        ret = at45db_check_id();
+        //ret = at45db_check_id();
         return ret;
 }
 
@@ -241,10 +240,10 @@ uint8_t write_buffer1(uint8_t* data,uint16_t len, uint16_t pos){
         cmd[3] = (address >> 8)  & 0xFF;
         gpio_write(0);
         spi_write(&cmd,4);
+        delay(1);
         spi_write(data,len);
-
         gpio_write(1);
-        at45db_wait(500);
+        at45db_wait(AT45DB_TIMEOUT);
 
 
         return ret;
@@ -264,10 +263,11 @@ uint8_t read_buffer1(uint8_t* data,uint16_t len, uint16_t pos){
         cmd[3] = (address >> 8)  & 0xFF;
         gpio_write(0);
         spi_write(&cmd,4);
+        delay(1);
         spi_read(data,len);
 
         gpio_write(1);
-        at45db_wait(500);
+        at45db_wait(AT45DB_TIMEOUT);
 
 
 
@@ -287,9 +287,10 @@ uint8_t write_page(uint8_t* data, uint16_t len, uint16_t pag,uint16_t pos){
         cmd[3] = (address >> 8)  & 0xFF;
         gpio_write(0);
         spi_write(&cmd,4);
+        delay(1);
         spi_read(data,len);
         gpio_write(1);
-        at45db_wait(500);
+        at45db_wait(AT45DB_TIMEOUT);
 
         return ret;        
 }
@@ -306,11 +307,12 @@ uint8_t read_page(uint8_t* data, uint16_t len, uint16_t pag,uint16_t pos){
         cmd[3] = (address >> 8)  & 0xFF;
         cmd[4] = dummyByte;
         gpio_write(0);
-        spi_write(&cmd,4);
+        spi_write(&cmd,5);
+        delay(1);
         spi_read(data,len);
         gpio_write(1);
         //wait
-        at45db_wait(500);
+        at45db_wait(AT45DB_TIMEOUT);
 
         return ret;        
 }
