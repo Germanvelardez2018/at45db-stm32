@@ -288,7 +288,7 @@ uint8_t write_page(uint8_t* data, uint16_t len, uint16_t pag,uint16_t pos){
         gpio_write(0);
         spi_write(&cmd,4);
         delay(1);
-        spi_read(data,len);
+        spi_write(data,len); // stupid bug. xD
         gpio_write(1);
         at45db_wait(AT45DB_TIMEOUT);
 
